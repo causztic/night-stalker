@@ -25,13 +25,20 @@ export default class Scraper {
       }, posts, count);
 
     const graphs = Grapher.deconstruct(graphEdges);
-    graphs.filter(graph => graph.isVideo).reduce((accumulator, graph) => {
-      return accumulator.then((results) => {
-        return this.nightmare
+
+    return graphs.filter(graph => graph.isVideo).reduce((accumulator, graph) =>
+      accumulator.then(results =>
+        this.nightmare
           .click(`a[href="/p/${graph.shortcode}/?taken-by=${this.username}"`)
-          .wait('video')
-          .evaluate(() => document.querySelector('video').src);
-      });
-    });
+          .wait(`video[poster='${graph.thumbnail}']`)
+          .evaluate(() => {
+            const { src } = document.querySelector('video');
+            document.evaluate('//button[text()="Close"]', document).iterateNext().click();
+            return src;
+          }).then((result) => {
+            graph.setVideo(result);
+            results.push(graph);
+            return results;
+          })), Promise.resolve([]));
   }
 }

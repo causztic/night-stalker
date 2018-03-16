@@ -8,12 +8,13 @@ export default class Grapher {
         id,
         shortcode,
         thumbnail_src: image,
+        display_url: thumbnail,
         taken_at_timestamp: timestamp,
         is_video: isVideo,
       } = edge;
 
       return new GraphObject({
-        id, shortcode, image, timestamp, isVideo,
+        id, shortcode, image, thumbnail, timestamp, isVideo,
       });
     });
   }
