@@ -1,5 +1,7 @@
 # night-stalker
 
+It is still under development and not meant for use yet.
+
 ## Getting Started
 ```
 yarn install
