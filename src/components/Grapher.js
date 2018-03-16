@@ -6,12 +6,14 @@ export default class Grapher {
     return edges.map((edge) => {
       const {
         id,
-        thumbnail_src: thumbnail,
+        shortcode,
+        thumbnail_src: image,
         taken_at_timestamp: timestamp,
         is_video: isVideo,
       } = edge;
+
       return new GraphObject({
-        id, thumbnail, timestamp, isVideo,
+        id, shortcode, image, timestamp, isVideo,
       });
     });
   }
