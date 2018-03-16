@@ -19,10 +19,13 @@ export default class Scraper {
         // eslint-disable-next-line prefer-destructuring
         const edges = profile.graphql.user.edge_owner_to_timeline_media.edges;
         edges.slice(0, postCount).forEach((edge) => {
-          postArray.push(edge);
+          postArray.push(edge.node);
         });
         return postArray;
       }, posts, count)
-      .end(edges => Grapher.deconstruct(edges));
+      .end((edges) => {
+        const graphs = Grapher.deconstruct(edges);
+        return graphs;
+      });
   }
 }
