@@ -1,0 +1,22 @@
+{
+  "name": "night-stalker",
+  "version": "0.1.0",
+  "description": "Get public instagram posts.",
+  "author": "Lim Yao Jie",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jest": "^21.15.0",
+    "jest": "^22.4.2"
+  },
+  "dependencies": {
+    "nightmare": "^3.0.0"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
