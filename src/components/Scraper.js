@@ -1,6 +1,7 @@
 /* eslint-env browser */
 
 import Nightmare from 'nightmare';
+import Grapher from './Grapher';
 
 export default class Scraper {
   constructor(username) {
@@ -13,12 +14,15 @@ export default class Scraper {
     return this.nightmare
       .goto(`https://www.instagram.com/${this.username}`)
       .evaluate((postArray, postCount) => {
-        Array.from(document.querySelectorAll('img'))
-          .slice(1, postCount + 1).forEach((image) => {
-            const post = { src: image.src, alt: image.alt };
-            postArray.push(post);
-          });
+        // eslint-disable-next-line no-underscore-dangle
+        const [profile] = window._sharedData.entry_data.ProfilePage;
+        // eslint-disable-next-line prefer-destructuring
+        const edges = profile.graphql.user.edge_owner_to_timeline_media.edges;
+        edges.slice(0, postCount).forEach((edge) => {
+          postArray.push(edge);
+        });
         return postArray;
-      }, posts, count);
+      }, posts, count)
+      .end(edges => Grapher.deconstruct(edges));
   }
 }
