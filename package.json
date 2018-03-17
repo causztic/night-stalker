@@ -13,10 +13,13 @@
     "eslint-plugin-jest": "^21.15.0",
     "jest": "^22.4.2"
   },
+  "main": "./dist/index.js",
   "dependencies": {
     "nightmare": "^3.0.0"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "babel src --presets babel-preset-env --out-dir dist",
+    "prepublish": "npm run build"
   }
 }
