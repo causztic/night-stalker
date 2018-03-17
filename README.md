@@ -1,6 +1,8 @@
 # night-stalker
 
-Simple Nightmare.js based Instagram Scraper for recent activities.
+Simple Nightmare.js based Instagram scraper for recent activities.
+The previous library I was using stopped working after Instagram removed their public facing APIs.
+Public posts should be allowed access by people anyway because well, they are public.
 
 ## Features
 - Gets up to 12 recent posts (video, post, carousel photos)

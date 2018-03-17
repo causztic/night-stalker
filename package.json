@@ -1,7 +1,7 @@
 {
   "name": "night-stalker",
   "version": "0.1.0",
-  "description": "Get public instagram posts.",
+  "description": "Simple Nightmare.js based Instagram scraper for public recent activities.",
   "author": "Lim Yao Jie",
   "license": "MIT",
   "devDependencies": {
