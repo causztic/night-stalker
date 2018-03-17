@@ -6,7 +6,7 @@ import Grapher from './Grapher';
 export default class NightStalker {
   constructor(username) {
     this.username = username;
-    this.nightmare = Nightmare({ show: true });
+    this.nightmare = Nightmare({ show: false });
   }
 
   async getPosts(count = 3) {
