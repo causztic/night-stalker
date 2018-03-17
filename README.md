@@ -22,7 +22,6 @@ yarn install
 ```
 
 ## TODO
-- Clean up exports
 - Scrape post descriptions
 - Check if user has any insta-story
 - Check if user is live
