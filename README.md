@@ -2,14 +2,15 @@
 [![npm version](https://badge.fury.io/js/night-stalker.svg)](https://badge.fury.io/js/night-stalker)
 
 Simple Nightmare.js based Instagram scraper for recent activities.
+
 The previous library I was using stopped working after Instagram removed their public facing APIs.
-Public posts should be allowed access by people anyway because well, they are public.
+Public posts should be readily accessible by people anyway because well, they are public.
 
 ## Features
 - Gets up to 12 recent posts (video, post, carousel photos)
 
 ## Getting Started
-This library requires Node 8 and above.
+This library requires Node 8 and above as it utilizes on ```async/await```.
 ```
 yarn install
 ```
