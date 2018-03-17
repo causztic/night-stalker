@@ -49,20 +49,26 @@ export default class NightStalker {
                 document.evaluate('//button[text()="Close"]', document).iterateNext().click();
                 resolve(src);
               }
+
               // otherwise, attempt to click next.
               let rightButton;
               const images = [];
-              do {
-                rightButton = document.querySelectorAll('article')[1].querySelector('.coreSpriteRightChevron');
-                const imageContainer = Array.from(document.querySelectorAll('img')).slice(-1)[0];
+              let imageContainer;
+
+              const carouselCallback = () => {
+                [imageContainer] = Array.from(document.querySelectorAll('img')).slice(-1);
                 images.push(imageContainer.src);
+
+                rightButton = document.querySelectorAll('article')[1].querySelector('.coreSpriteRightChevron');
                 if (rightButton) {
                   rightButton.click();
+                  setTimeout(carouselCallback, 100);
+                } else {
+                  document.evaluate('//button[text()="Close"]', document).iterateNext().click();
+                  resolve(images);
                 }
-              } while (rightButton);
-              document.evaluate('//button[text()="Close"]', document).iterateNext().click();
-
-              resolve(images);
+              };
+              carouselCallback();
             })
           , graph.isVideo,
         ).then((result) => {
