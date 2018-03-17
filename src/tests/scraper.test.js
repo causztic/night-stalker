@@ -1,9 +1,10 @@
-import Scraper from '../components/Scraper';
+import NightStalker from '../components/NightStalker';
 
 jest.setTimeout(10000);
 test('it should get posts', async () => {
-  const scraper = new Scraper('instagram');
-  const posts = await scraper.getPosts(3);
+  const ns = new NightStalker('rrreol999');
+  const posts = await ns.getPosts(3);
+  console.log(posts);
   expect(posts).toHaveLength(3);
 });
 
