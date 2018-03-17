@@ -19,3 +19,9 @@ yarn install
   const balanar = new NightStalker(username);
   const posts = await balanar.getPosts(noOfPosts);
 ```
+
+## TODO
+- Clean up exports
+- Scrape post descriptions
+- Check if user has any insta-story
+- Check if user is live
