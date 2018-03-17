@@ -26,17 +26,6 @@ export default class NightStalker {
 
     const graphs = Grapher.deconstruct(graphEdges);
 
-    // if (graph.isVideo) {
-    //   return this.nightmare
-    //     .click(`a[href="/p/${graph.shortcode}/?taken-by=${this.username}"`)
-    //     .wait(`video[poster='${graph.thumbnail}']`)
-    //     .evaluate(() => {
-    //       const { src } = document.querySelector('video');
-    //       document.evaluate('//button[text()="Close"]', document).iterateNext().click();
-    //       return src;
-    //     })
-    // }
-
     return graphs.reduce((accumulator, graph) =>
       accumulator.then(results => this.nightmare
         .click(`a[href="/p/${graph.shortcode}/?taken-by=${this.username}"`)

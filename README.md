@@ -1,14 +1,18 @@
 # night-stalker
 
-It is still under development and not meant for use yet.
+Simple Nightmare.js based Instagram Scraper for recent activities.
+
+## Features
+- Gets up to 12 recent posts (video, post, carousel photos)
 
 ## Getting Started
+This library requires Node 8 and above.
 ```
 yarn install
 ```
 
 ## Usage
 ```javascript
-  const scraper = new Scraper(username);
-  const posts = await scraper.getPosts(noOfPosts);
+  const balanar = new NightStalker(username);
+  const posts = await balanar.getPosts(noOfPosts);
 ```
