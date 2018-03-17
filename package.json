@@ -4,14 +4,17 @@
   "description": "Simple Nightmare.js based Instagram scraper for public recent activities.",
   "author": "Lim Yao Jie",
   "license": "MIT",
+  "engines": {
+    "node": "8.9.1"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jest": "^21.15.0",
-    "jest": "^22.4.2"
+    "jest": "^22.4.2",
+    "babel-preset-env": "^1.6.1"
   },
   "main": "./dist/index.js",
   "dependencies": {
@@ -19,7 +22,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "babel src --presets babel-preset-env --out-dir dist",
+    "build": "babel src --out-dir dist",
     "prepublish": "npm run build"
   }
 }

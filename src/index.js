@@ -1,3 +1,1 @@
-import NightStalker from './components/NightStalker';
-
-module.exports = { NightStalker };
+module.exports = require('./components/NightStalker');
