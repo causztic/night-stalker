@@ -4,6 +4,7 @@ jest.setTimeout(10000);
 test('it should get posts', async () => {
   const ns = new NightStalker('instagram');
   const posts = await ns.getPosts(3);
+  console.dir(posts);
   expect(posts).toHaveLength(3);
 });
 

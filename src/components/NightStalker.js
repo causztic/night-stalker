@@ -6,7 +6,7 @@ import Grapher from './Grapher';
 export default class NightStalker {
   constructor(username) {
     this.username = username;
-    this.nightmare = Nightmare({ show: false });
+    this.nightmare = Nightmare({ show: true });
   }
 
   async getPosts(count = 3) {
@@ -30,37 +30,32 @@ export default class NightStalker {
       accumulator.then(results => this.nightmare
         .click(`a[href="/p/${graph.shortcode}/?taken-by=${this.username}"`)
         .wait(() => document.querySelectorAll('article').length === 2)
-        .evaluate(
-          isVideo =>
-            new Promise((resolve, reject) => {
-              if (isVideo) {
-                const { src } = document.querySelector('video');
-                document.evaluate('//button[text()="Close"]', document).iterateNext().click();
-                resolve(src);
+        .evaluate(() =>
+          new Promise((resolve, reject) => {
+            // otherwise, attempt to click next.
+            let rightButton;
+            const images = [];
+
+            const carouselCallback = () => {
+              const video = document.querySelector('video');
+              let src;
+              if (video !== null) {
+                ({ src } = video);
+              } else {
+                ([{ src }] = Array.from(document.querySelectorAll('img')).slice(-1));
               }
-
-              // otherwise, attempt to click next.
-              let rightButton;
-              const images = [];
-              let imageContainer;
-
-              const carouselCallback = () => {
-                [imageContainer] = Array.from(document.querySelectorAll('img')).slice(-1);
-                images.push(imageContainer.src);
-
-                rightButton = document.querySelectorAll('article')[1].querySelector('.coreSpriteRightChevron');
-                if (rightButton) {
-                  rightButton.click();
-                  setTimeout(carouselCallback, 100);
-                } else {
-                  document.evaluate('//button[text()="Close"]', document).iterateNext().click();
-                  resolve(images);
-                }
-              };
-              carouselCallback();
-            })
-          , graph.isVideo,
-        )
+              images.push(src);
+              rightButton = document.querySelectorAll('article')[1].querySelector('.coreSpriteRightChevron');
+              if (rightButton) {
+                rightButton.click();
+                setTimeout(carouselCallback, 100);
+              } else {
+                document.evaluate('//button[text()="Close"]', document).iterateNext().click();
+                resolve(images);
+              }
+            };
+            carouselCallback();
+          }))
         .then((result) => {
           if (graph.isVideo) {
             graph.setVideo(result);
