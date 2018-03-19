@@ -1,18 +1,13 @@
 export default class GraphObject {
-  constructor({ id, shortcode, image, thumbnail, timestamp, isVideo }) {
+  constructor({ id, shortcode, media, thumbnail, timestamp }) {
     this.id = id;
     this.shortcode = shortcode;
-    this.image = [image];
+    this.media = [media];
     this.thumbnail = thumbnail;
     this.timestamp = timestamp;
-    this.isVideo = isVideo;
   }
 
-  setVideo(video) {
-    this.video = video;
-  }
-
-  setImages(images) {
-    this.image = images;
+  setMedia(media) {
+    this.media = media;
   }
 }

@@ -7,14 +7,13 @@ export default class Grapher {
       const {
         id,
         shortcode,
-        thumbnail_src: image,
+        thumbnail_src: media,
         display_url: thumbnail,
         taken_at_timestamp: timestamp,
-        is_video: isVideo,
       } = edge;
 
       return new GraphObject({
-        id, shortcode, image, thumbnail, timestamp, isVideo,
+        id, shortcode, media, thumbnail, timestamp,
       });
     });
   }

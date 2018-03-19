@@ -6,7 +6,7 @@ import Grapher from './Grapher';
 export default class NightStalker {
   constructor(username) {
     this.username = username;
-    this.nightmare = Nightmare({ show: true });
+    this.nightmare = Nightmare({ show: false });
   }
 
   async getPosts(count = 3) {
@@ -44,6 +44,10 @@ export default class NightStalker {
               } else {
                 ([{ src }] = Array.from(document.querySelectorAll('img')).slice(-1));
               }
+              if (src === undefined) {
+                reject(new Error('Source not found.'));
+              }
+
               images.push(src);
               rightButton = document.querySelectorAll('article')[1].querySelector('.coreSpriteRightChevron');
               if (rightButton) {
@@ -57,11 +61,7 @@ export default class NightStalker {
             carouselCallback();
           }))
         .then((result) => {
-          if (graph.isVideo) {
-            graph.setVideo(result);
-          } else {
-            graph.setImages(result);
-          }
+          graph.setMedia(result);
           results.push(graph);
           return results;
         })), Promise.resolve([]))
