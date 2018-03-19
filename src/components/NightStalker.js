@@ -60,7 +60,8 @@ export default class NightStalker {
               carouselCallback();
             })
           , graph.isVideo,
-        ).then((result) => {
+        )
+        .then((result) => {
           if (graph.isVideo) {
             graph.setVideo(result);
           } else {
@@ -68,6 +69,10 @@ export default class NightStalker {
           }
           results.push(graph);
           return results;
-        })), Promise.resolve([]));
+        })), Promise.resolve([]))
+      .then((results) => {
+        this.nightmare.end().then();
+        return results;
+      });
   }
 }
