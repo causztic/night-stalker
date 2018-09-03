@@ -13,12 +13,12 @@ test('it should return carousel items', async () => {
   const ns = new NightStalker('rrreol999');
   const graphObject = new GraphObject({
     id: '1',
-    shortcode: 'Bmlafi9Bw-2',
+    shortcode: 'Bj4v4rfj0jp',
     media: '',
     thumbnail: '',
     timestamp: '',
   });
 
   const posts = await ns.getPostsFrom(graphObject);
-  expect(posts.media).toHaveLength(2);
+  expect(posts.media).toHaveLength(5);
 });

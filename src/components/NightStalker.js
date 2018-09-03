@@ -13,15 +13,20 @@ export default class NightStalker {
     await this.nightmare
       .goto(`https://www.instagram.com/p/${graph.shortcode}/?taken-by=${this.username}`)
       .evaluate(() => {
-        const videos = document.querySelector('video') ? Array.from(document.querySelector('video')) : [];
-        const images = Array.from(document.querySelectorAll('img')).splice(1);
-        const data = {
-          media: videos.concat(images).map(image => image.src),
-          description: '',
-        };
-        if (images.length > 0) {
-          data.description = images[0].alt;
+        // eslint-disable-next-line
+        const post = window._sharedData.entry_data.PostPage[0].graphql.shortcode_media;
+        // eslint-disable-next-line
+        let media = [];
+        if (post.edge_sidecar_to_children) {
+          media = post.edge_sidecar_to_children.edges.map(edge => edge.node.display_resources.slice(-1)[0].src);
+        } else {
+          media = post.display_resources.slice(-1)[0].src;
         }
+        const [captionEdge] = post.edge_media_to_caption.edges;
+        const data = {
+          media,
+          description: captionEdge ? captionEdge.node.text : '',
+        };
         return data;
       })
       .then((result) => {
