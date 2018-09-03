@@ -9,6 +9,28 @@ export default class NightStalker {
     this.nightmare = Nightmare({ show: false });
   }
 
+  async getPostsFrom(graph) {
+    await this.nightmare
+      .goto(`https://www.instagram.com/p/${graph.shortcode}/?taken-by=${this.username}`)
+      .evaluate(() => {
+        const videos = document.querySelector('video') ? Array.from(document.querySelector('video')) : [];
+        const images = Array.from(document.querySelectorAll('img')).splice(1);
+        const data = {
+          media: videos.concat(images).map(image => image.src),
+          description: '',
+        };
+        if (images.length > 0) {
+          data.description = images[0].alt;
+        }
+        return data;
+      })
+      .then((result) => {
+        graph.setMedia(result.media);
+        graph.setDescription(result.description);
+      });
+    return graph;
+  }
+
   async getPosts(count = 3) {
     const graphEdges = await this.nightmare
       .goto(`https://www.instagram.com/${this.username}`)
@@ -25,44 +47,10 @@ export default class NightStalker {
       }, count);
 
     const graphs = Grapher.deconstruct(graphEdges);
-
     return graphs.reduce((accumulator, graph) =>
-      accumulator.then(results => this.nightmare
-        .click(`a[href="/p/${graph.shortcode}/?taken-by=${this.username}"`)
-        .wait(() => document.querySelectorAll('article').length === 2)
-        .evaluate(() =>
-          new Promise((resolve, reject) => {
-            // otherwise, attempt to click next.
-            let rightButton;
-            const images = [];
-
-            const carouselCallback = () => {
-              const video = document.querySelector('video');
-              let src;
-              if (video !== null) {
-                ({ src } = video);
-              } else {
-                ([{ src }] = Array.from(document.querySelectorAll('img')).slice(-1));
-              }
-              if (src === undefined) {
-                reject(new Error('Source not found.'));
-              }
-
-              images.push(src);
-              rightButton = document.querySelectorAll('article')[1].querySelector('.coreSpriteRightChevron');
-              if (rightButton) {
-                rightButton.click();
-                setTimeout(carouselCallback, 100);
-              } else {
-                document.evaluate('//button[text()="Close"]', document).iterateNext().click();
-                resolve(images);
-              }
-            };
-            carouselCallback();
-          }))
-        .then((result) => {
-          graph.setMedia(result);
-          results.push(graph);
+      accumulator.then(results =>
+        this.getPostsFrom(graph).then((updatedGraph) => {
+          results.push(updatedGraph);
           return results;
         })), Promise.resolve([]))
       .then((results) => {
