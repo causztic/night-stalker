@@ -22,6 +22,5 @@ yarn install
 ```
 
 ## TODO
-- Scrape post descriptions
 - Check if user has any insta-story
 - Check if user is live
