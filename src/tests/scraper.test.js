@@ -9,16 +9,30 @@ test('it should get posts', async () => {
   expect(posts[0].media[0]).not.toBe('');
 });
 
-test('it should return carousel items', async () => {
+test('it should work for non-carousel items', async () => {
   const ns = new NightStalker('rrreol999');
   const graphObject = new GraphObject({
     id: '1',
-    shortcode: 'Bj4v4rfj0jp',
+    shortcode: 'BncH7a_h_13',
     media: '',
     thumbnail: '',
     timestamp: '',
   });
 
   const posts = await ns.getPostsFrom(graphObject);
-  expect(posts.media).toHaveLength(5);
+  expect(posts.media).toHaveLength(1);
+});
+
+test('it should return carousel items', async () => {
+  const ns = new NightStalker('rrreol999');
+  const graphObject = new GraphObject({
+    id: '1',
+    shortcode: 'Bj4wlfajGIi',
+    media: '',
+    thumbnail: '',
+    timestamp: '',
+  });
+
+  const posts = await ns.getPostsFrom(graphObject);
+  expect(posts.media).toHaveLength(4);
 });

@@ -20,7 +20,7 @@ export default class NightStalker {
         if (post.edge_sidecar_to_children) {
           media = post.edge_sidecar_to_children.edges.map(edge => edge.node.display_resources.slice(-1)[0].src);
         } else {
-          media = post.display_resources.slice(-1)[0].src;
+          media = [post.display_resources.slice(-1)[0].src];
         }
         const [captionEdge] = post.edge_media_to_caption.edges;
         const data = {
