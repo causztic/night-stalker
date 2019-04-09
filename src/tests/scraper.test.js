@@ -2,6 +2,16 @@ import NightStalker from '../components/NightStalker';
 import GraphObject from '../components/GraphObject';
 
 jest.setTimeout(10000);
+test('it should set default args of no sandbox', async () => {
+  const ns = new NightStalker('instagram');
+  expect(ns.args).toEqual(['--no-sandbox', '--disable-setuid-sandbox']);
+});
+
+test('it should allow overriding of args', async () => {
+  const ns = new NightStalker('instagram', ['--potato']);
+  expect(ns.args).toEqual(['--potato']);
+});
+
 test('it should get posts', async () => {
   const ns = new NightStalker('instagram');
   const posts = await ns.getPosts(3);

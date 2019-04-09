@@ -5,12 +5,17 @@ import Grapher from './Grapher';
 const puppeteer = require('puppeteer');
 
 export default class NightStalker {
-  constructor(username) {
+  constructor(username, args) {
     this.username = username;
+    if (args) {
+      this.args = args;
+    } else {
+      this.args = ['--no-sandbox', '--disable-setuid-sandbox'];
+    }
   }
 
   async getPostsFrom(graph) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: this.args });
     const page = await browser.newPage();
     await page.goto(`https://www.instagram.com/p/${graph.shortcode}/?taken-by=${this.username}`);
 
@@ -38,7 +43,7 @@ export default class NightStalker {
   }
 
   async getPosts(count = 3) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: this.args });
     const page = await browser.newPage();
     await page.goto(`https://www.instagram.com/${this.username}`);
 
