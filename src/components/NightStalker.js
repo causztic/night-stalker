@@ -36,8 +36,12 @@ export default class NightStalker {
       };
       return data;
     });
+
     graph.setMedia(result.media);
     graph.setDescription(result.description);
+
+    await page.close();
+    await browser.close();
 
     return graph;
   }
@@ -59,21 +63,11 @@ export default class NightStalker {
       return postArray;
     }, count);
 
-    // const graphEdges = await this.nightmare
-    //   .goto(`https://www.instagram.com/${this.username}`)
-    //   .evaluate((postCount) => {
-    //     const postArray = [];
-    //     // eslint-disable-next-line no-underscore-dangle
-    //     const [profile] = window._sharedData.entry_data.ProfilePage;
-    //     // eslint-disable-next-line prefer-destructuring
-    //     const edges = profile.graphql.user.edge_owner_to_timeline_media.edges;
-    //     edges.slice(0, postCount).forEach((edge) => {
-    //       postArray.push(edge.node);
-    //     });
-    //     return postArray;
-    //   }, count);
-
     const graphs = Grapher.deconstruct(graphEdges);
+
+    await page.close();
+    await browser.close();
+
     return graphs.reduce((accumulator, graph) =>
       accumulator.then(results =>
         this.getPostsFrom(graph).then((updatedGraph) => {
