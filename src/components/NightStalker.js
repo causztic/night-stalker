@@ -15,7 +15,7 @@ export default class NightStalker {
   }
 
   async getPostsFrom(graph) {
-    const browser = await puppeteer.launch({ args: this.args });
+    const browser = await puppeteer.launch({ headless: true, args: this.args });
     const page = await browser.newPage();
     await page.goto(`https://www.instagram.com/p/${graph.shortcode}/?taken-by=${this.username}`);
 
