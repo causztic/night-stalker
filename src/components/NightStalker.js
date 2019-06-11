@@ -15,6 +15,12 @@ export default class NightStalker {
     this.username = username;
   }
 
+  async login(username, password) {
+    const browser = await puppeteer.launch({ args: this.args });
+    const page = await browser.newPage();
+    await page.goto('https://www.instagram.com/accounts/login');
+  }
+
   async getPostsFrom(graph) {
     const browser = await puppeteer.launch({ headless: true, args: this.args });
     const page = await browser.newPage();
