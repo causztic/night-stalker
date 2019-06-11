@@ -21,7 +21,7 @@
     "puppeteer": "^1.14.0"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest src/tests",
     "build": "babel src --out-dir dist",
     "prepare": "npm run build"
   }

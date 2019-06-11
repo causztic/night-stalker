@@ -3,13 +3,16 @@ import Grapher from './Grapher';
 const puppeteer = require('puppeteer');
 
 export default class NightStalker {
-  constructor(username, args) {
-    this.username = username;
+  constructor(args) {
     if (args) {
       this.args = args;
     } else {
       this.args = ['--no-sandbox', '--disable-setuid-sandbox'];
     }
+  }
+
+  setUserName(username) {
+    this.username = username;
   }
 
   async getPostsFrom(graph) {
