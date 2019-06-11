@@ -10,7 +10,7 @@ Public posts should be readily accessible by people anyway because well, they ar
 - Gets up to 12 recent posts (video, post, carousel photos)
 
 ## Getting Started
-This library requires Node 7.6.0 or above as it utilizes on ```async/await```.
+This library requires Node 8.10.0 and above as it utilizes on ```async/await```, and as per ESLint's requirements.
 ```
 yarn install
 ```
