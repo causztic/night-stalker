@@ -1,10 +1,12 @@
 {
   "env": {
-    "jest": true
+    "jest": true,
+    "browser": true
   },
   "extends": "airbnb-base",
-  "plugins": ["jest"],
+  "plugins": ["jest", "import"],
   "rules": {
+    "implicit-arrow-linebreak": "off",
     "object-curly-newline": ["error", {
       "ObjectExpression": { "multiline": true, "minProperties": 3 },
       "ObjectPattern": { "multiline": true },

@@ -1,5 +1,3 @@
-/* eslint-env browser */
-
 import Grapher from './Grapher';
 
 const puppeteer = require('puppeteer');

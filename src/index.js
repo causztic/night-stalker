@@ -1,1 +1,1 @@
-module.exports = require('./components/NightStalker');
+export default './components/NightStalker';
