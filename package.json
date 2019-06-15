@@ -1,7 +1,7 @@
 {
   "name": "night-stalker",
-  "version": "0.5.2",
-  "description": "Simple Nightmare.js based Instagram scraper for public recent activities.",
+  "version": "1.0.0",
+  "description": "Simple Nightmare.js based Instagram scraper.",
   "author": "Lim Yao Jie",
   "license": "MIT",
   "engines": {

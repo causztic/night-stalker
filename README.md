@@ -21,8 +21,9 @@ yarn install
   balanar.setUserName('username-to-scrape');
   
   const posts = await balanar.getPosts(noOfPosts);
+  const stories = await balanar.getStories();
 ```
+Take note that story URLs are time-sensitive and will expire within x minutes.
 
 ## TODO
-- Check if user has any insta-story
-- Check if user is live
+- Livestream URLs

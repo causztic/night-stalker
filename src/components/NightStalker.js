@@ -23,7 +23,7 @@ export default class NightStalker {
   }
 
   static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir = './user_data') {
-    const browser = await puppeteer.launch({ headless: false, args, userDataDir });
+    const browser = await puppeteer.launch({ args, userDataDir });
     return new NightStalker(browser, args, userDataDir);
   }
 
