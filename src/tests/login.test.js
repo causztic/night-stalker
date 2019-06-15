@@ -22,7 +22,7 @@ test('it should login correctly', async () => {
 test('it should get stories', async () => {
   const ns = await NightStalker.loadBrowser();
   await ns.login(process.env.USERNAME, process.env.PASSWORD);
-  // here we rely on instagram to publish stories all the time..which they probably will.
+  // will fail if instagram has no stories..need to find a better way to test
   ns.setUserName('instagram');
   const stories = await ns.getStories();
   stories.forEach((story) => {
