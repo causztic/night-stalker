@@ -8,6 +8,7 @@ Public posts should be readily accessible by people anyway because well, they ar
 
 ## Features
 - Gets up to 12 recent posts (video, post, carousel photos)
+- Retrieves latest stories by users
 
 ## Getting Started
 This library requires Node 8.10.0 and above as it utilizes on ```async/await```, and as per ESLint's requirements.
