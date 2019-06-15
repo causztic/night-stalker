@@ -17,9 +17,17 @@ export default class NightStalker {
     await this.browser.close();
   }
 
-  static async isLoggedIn(page) {
-    await page.goto('https://www.instagram.com');
-    return page.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
+  async isLoggedIn(page = undefined) {
+    let currentPage = page;
+    if (page === undefined) {
+      currentPage = await this.browser.newPage();
+    }
+    await currentPage.goto('https://www.instagram.com');
+    const result = await currentPage.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
+    if (page === undefined) {
+      await currentPage.close();
+    }
+    return result;
   }
 
   static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir = './user_data') {
@@ -28,10 +36,10 @@ export default class NightStalker {
   }
 
   async login(username, password) {
-    const page = await this.browser.newPage();
-    if (await NightStalker.isLoggedIn(page)) {
-      return page;
+    if (await this.isLoggedIn()) {
+      return true;
     }
+    const page = await this.browser.newPage();
     // no session, logging in
     await page.goto('https://www.instagram.com/accounts/login');
     await page.waitForSelector('input');
@@ -39,11 +47,12 @@ export default class NightStalker {
     await page.type('input[type="password"]', password);
     await page.click('button[type="submit"]');
     const response = await page.waitForNavigation({ timeout: 10000 });
+    await page.close();
     if (response.ok()) {
-      return page;
+      return true;
     }
     // invalid credentials
-    throw new Error('invalid credentials.');
+    return false;
   }
 
   async getPostsFrom(graph) {
@@ -78,13 +87,14 @@ export default class NightStalker {
 
   async getStories() {
     const page = await this.browser.newPage();
-    if (await NightStalker.isLoggedIn(page)) {
+    if (await this.isLoggedIn(page)) {
       await page.goto(`https://www.instagram.com/stories/${this.username}/`);
 
       // eslint-disable-next-line
       const userId = await page.evaluate(() => window._sharedData.entry_data.StoriesPage[0].user.id);
       page.setUserAgent('Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+');
       const results = await page.goto(`https://i.instagram.com/api/v1/feed/user/${userId}/reel_media/`).then(res => res.json());
+      await page.close();
       return results.items.map((item) => {
         if (item.media_type === 2) {
           // video
@@ -99,6 +109,7 @@ export default class NightStalker {
       });
     }
 
+    await page.close();
     throw new Error('must be logged in to get stories');
   }
 

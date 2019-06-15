@@ -1,6 +1,7 @@
 import NightStalker from '../components/NightStalker';
 
-jest.setTimeout(10000);
+jest.setTimeout(20000);
+
 test('it should set default args of no sandbox', async () => {
   const ns = await NightStalker.loadBrowser();
   expect(ns.args).toEqual(['--no-sandbox', '--disable-setuid-sandbox']);

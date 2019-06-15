@@ -23,7 +23,7 @@
     "puppeteer": "^1.14.0"
   },
   "scripts": {
-    "test": "jest src/tests",
+    "test": "jest src/tests --runInBand",
     "build": "babel src --out-dir dist",
     "prepare": "npm run build"
   }
