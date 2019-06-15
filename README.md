@@ -21,6 +21,10 @@ yarn install
   balanar.setUserName('username-to-scrape');
   
   const posts = await balanar.getPosts(noOfPosts);
+
+  // Login is required for stories. Don't commit your credentials to version control!
+  // The account also should not have 2FA enabled.
+  await balanar.login(username, password); 
   const stories = await balanar.getStories();
 ```
 Take note that story URLs are time-sensitive and will expire within x minutes.
