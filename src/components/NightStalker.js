@@ -1,18 +1,12 @@
 import Grapher from './Grapher';
 
-require('dotenv').config();
-
 const puppeteer = require('puppeteer');
 
 export default class NightStalker {
-  constructor(browser, args) {
+  constructor(browser, args, userDataDir) {
     this.browser = browser;
     this.args = args;
-  }
-
-  static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox']) {
-    const browser = await puppeteer.launch({ args });
-    return new NightStalker(browser, args);
+    this.userDataDir = userDataDir;
   }
 
   setUserName(username) {
@@ -23,18 +17,33 @@ export default class NightStalker {
     await this.browser.close();
   }
 
+  static async isLoggedIn(page) {
+    await page.goto('https://www.instagram.com');
+    return page.evaluate(el => el.classList.contains('logged-in'), await page.$('html'));
+  }
+
+  static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir = './user_data') {
+    const browser = await puppeteer.launch({ args, userDataDir });
+    return new NightStalker(browser, args, userDataDir);
+  }
+
   async login(username, password) {
     const page = await this.browser.newPage();
+    if (await this.isLoggedIn(page)) {
+      return page;
+    }
+    // no session, logging in
     await page.goto('https://www.instagram.com/accounts/login');
-
     await page.waitForSelector('input');
     await page.type('input[type="text"]', username);
     await page.type('input[type="password"]', password);
     await page.click('button[type="submit"]');
     const response = await page.waitForNavigation({ timeout: 10000 });
-
-    // await page.close();
-    return response;
+    if (response.ok()) {
+      return page;
+    }
+    // invalid credentials
+    throw new Error('invalid credentials.');
   }
 
   async getPostsFrom(graph) {
