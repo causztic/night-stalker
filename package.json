@@ -22,6 +22,7 @@
     "node-persist": "^3.0.4",
     "puppeteer": "^1.14.0"
   },
+  "keywords": ["instagram", "scraping", "scrape", "puppeteer"],
   "scripts": {
     "test": "jest src/tests --runInBand",
     "build": "babel src --out-dir dist",
