@@ -1,26 +1,20 @@
 import NightStalker from '../components/NightStalker';
 import GraphObject from '../components/GraphObject';
 
-jest.setTimeout(10000);
-test('it should set default args of no sandbox', async () => {
-  const ns = new NightStalker('instagram');
-  expect(ns.args).toEqual(['--no-sandbox', '--disable-setuid-sandbox']);
-});
-
-test('it should allow overriding of args', async () => {
-  const ns = new NightStalker('instagram', ['--potato']);
-  expect(ns.args).toEqual(['--potato']);
-});
+jest.setTimeout(20000);
 
 test('it should get posts', async () => {
-  const ns = new NightStalker('instagram');
+  const ns = await NightStalker.loadBrowser();
+  ns.setUserName('rrreol999');
   const posts = await ns.getPosts(3);
   expect(posts).toHaveLength(3);
   expect(posts[0].media[0]).not.toBe('');
+  await ns.tearDown();
 });
 
 test('it should work for non-carousel items', async () => {
-  const ns = new NightStalker('rrreol999');
+  const ns = await NightStalker.loadBrowser();
+  ns.setUserName('rrreol999');
   const graphObject = new GraphObject({
     id: '1',
     shortcode: 'BncH7a_h_13',
@@ -31,10 +25,12 @@ test('it should work for non-carousel items', async () => {
 
   const posts = await ns.getPostsFrom(graphObject);
   expect(posts.media).toHaveLength(1);
+  await ns.tearDown();
 });
 
 test('it should return carousel items', async () => {
-  const ns = new NightStalker('rrreol999');
+  const ns = await NightStalker.loadBrowser();
+  ns.setUserName('rrreol999');
   const graphObject = new GraphObject({
     id: '1',
     shortcode: 'Bj4wlfajGIi',
@@ -45,4 +41,5 @@ test('it should return carousel items', async () => {
 
   const posts = await ns.getPostsFrom(graphObject);
   expect(posts.media).toHaveLength(4);
+  await ns.tearDown();
 });
