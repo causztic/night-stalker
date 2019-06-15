@@ -4,25 +4,25 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs-extra');
 
-const appDir = path.dirname(require.main.filename);
-
 jest.setTimeout(10000);
+let ns;
 
 test('it should login correctly', async () => {
-  let ns = await NightStalker.loadBrowser();
-  fs.removeSync(`${appDir}/${ns.userDataDir}`);
+  ns = await NightStalker.loadBrowser();
+  fs.removeSync(path.join(__dirname, '../../', ns.userDataDir));
 
   let page = await ns.browser.newPage();
-  expect(NightStalker.isLoggedIn(page)).toBeFalsy();
+  expect(await NightStalker.isLoggedIn(page)).toBeFalsy();
 
-  page = await ns.login(process.env.USERNAME, process.env.PASSWORD);
-  expect(page).not.toThrow();
+  await ns.login(process.env.USERNAME, process.env.PASSWORD);
   await ns.tearDown();
 
   ns = await NightStalker.loadBrowser();
   // session should be saved
   page = await ns.browser.newPage();
-  expect(NightStalker.isLoggedIn(page)).toBeTruthy();
+  expect(await NightStalker.isLoggedIn(page)).toBeTruthy();
+});
 
+afterAll(async () => {
   await ns.tearDown();
 });

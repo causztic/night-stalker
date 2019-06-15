@@ -19,7 +19,7 @@ export default class NightStalker {
 
   static async isLoggedIn(page) {
     await page.goto('https://www.instagram.com');
-    return page.evaluate(el => el.classList.contains('logged-in'), await page.$('html'));
+    return page.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
   }
 
   static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir = './user_data') {
@@ -29,7 +29,7 @@ export default class NightStalker {
 
   async login(username, password) {
     const page = await this.browser.newPage();
-    if (await this.isLoggedIn(page)) {
+    if (await NightStalker.isLoggedIn(page)) {
       return page;
     }
     // no session, logging in
