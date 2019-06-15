@@ -1,14 +1,11 @@
 import NightStalker from '../components/NightStalker';
 
 require('dotenv').config();
-// const path = require('path');
-// const fs = require('fs-extra');
 
 jest.setTimeout(20000);
 
 test('it should login correctly', async () => {
   let ns = await NightStalker.loadBrowser();
-  // fs.removeSync(path.join(__dirname, '../../', ns.userDataDir));
 
   if (!await ns.isLoggedIn()) {
     expect(await ns.login(process.env.USERNAME, process.env.PASSWORD)).toBeTruthy();

@@ -1,12 +1,12 @@
 import Grapher from './Grapher';
 
 const puppeteer = require('puppeteer');
+const storage = require('node-persist');
 
 export default class NightStalker {
-  constructor(browser, args, userDataDir) {
+  constructor(browser, args) {
     this.browser = browser;
     this.args = args;
-    this.userDataDir = userDataDir;
   }
 
   setUserName(username) {
@@ -18,21 +18,38 @@ export default class NightStalker {
   }
 
   async isLoggedIn(page = undefined) {
-    let currentPage = page;
-    if (page === undefined) {
-      currentPage = await this.browser.newPage();
+    const cookie = await storage.getItem('night-stalker-cookie');
+    let result;
+
+    if (Object.keys(cookie).length > 0) {
+      // has cookie, try to login
+      let currentPage = page;
+      if (page === undefined) {
+        currentPage = await this.browser.newPage();
+      }
+      await currentPage.setCookie(...cookie);
+      await currentPage.goto('https://www.instagram.com');
+      // if invalid cookie, return false
+      result = await currentPage.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
+      if (page === undefined) {
+        await currentPage.close();
+      }
+    } else {
+      result = false;
     }
-    await currentPage.goto('https://www.instagram.com');
-    const result = await currentPage.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
-    if (page === undefined) {
-      await currentPage.close();
-    }
+
     return result;
   }
 
-  static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir = './user_data') {
-    const browser = await puppeteer.launch({ args, userDataDir });
-    return new NightStalker(browser, args, userDataDir);
+  static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox']) {
+    const browser = await puppeteer.launch({ args });
+    await storage.init();
+    return new NightStalker(browser, args);
+  }
+
+  // will be useful for downloading stories
+  static async getSession() {
+    return storage.getItem('night-stalker-cookie');
   }
 
   async login(username, password) {
@@ -47,10 +64,13 @@ export default class NightStalker {
     await page.type('input[type="password"]', password);
     await page.click('button[type="submit"]');
     const response = await page.waitForNavigation({ timeout: 10000 });
-    await page.close();
     if (response.ok()) {
+      // store the cookies to be reused
+      await storage.setItem('night-stalker-cookie', await page.cookies());
+      await page.close();
       return true;
     }
+    await page.close();
     // invalid credentials
     return false;
   }

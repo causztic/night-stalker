@@ -30,5 +30,4 @@ yarn install
 Take note that story URLs are time-sensitive and will expire within x minutes.
 
 ## TODO
-- Improve efficiency - maybe only store the required cookies instead of saving the entire User Data Directory
 - Livestream URLs
