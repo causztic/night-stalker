@@ -23,7 +23,7 @@ export default class NightStalker {
   }
 
   static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir = './user_data') {
-    const browser = await puppeteer.launch({ args, userDataDir });
+    const browser = await puppeteer.launch({ headless: false, args, userDataDir });
     return new NightStalker(browser, args, userDataDir);
   }
 
@@ -74,6 +74,32 @@ export default class NightStalker {
     await page.close();
 
     return graph;
+  }
+
+  async getStories() {
+    const page = await this.browser.newPage();
+    if (await NightStalker.isLoggedIn(page)) {
+      await page.goto(`https://www.instagram.com/stories/${this.username}/`);
+
+      // eslint-disable-next-line
+      const userId = await page.evaluate(() => window._sharedData.entry_data.StoriesPage[0].user.id);
+      page.setUserAgent('Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+');
+      const results = await page.goto(`https://i.instagram.com/api/v1/feed/user/${userId}/reel_media/`).then(res => res.json());
+      return results.items.map((item) => {
+        if (item.media_type === 2) {
+          // video
+          return item.video_versions[0].url;
+        }
+        if (item.media_type === 1) {
+          // still image
+          return item.image_versions2.candidates[0].url;
+        }
+        // not sure what other media types are there
+        return null;
+      });
+    }
+
+    throw new Error('must be logged in to get stories');
   }
 
   async getPosts(count = 3) {
