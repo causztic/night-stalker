@@ -1,29 +1,44 @@
 import Grapher from './Grapher';
 
+require('dotenv').config();
+
 const puppeteer = require('puppeteer');
 
 export default class NightStalker {
-  constructor(args) {
-    if (args) {
-      this.args = args;
-    } else {
-      this.args = ['--no-sandbox', '--disable-setuid-sandbox'];
-    }
+  constructor(browser, args) {
+    this.browser = browser;
+    this.args = args;
+  }
+
+  static async loadBrowser(args = ['--no-sandbox', '--disable-setuid-sandbox']) {
+    const browser = await puppeteer.launch({ args });
+    return new NightStalker(browser, args);
   }
 
   setUserName(username) {
     this.username = username;
   }
 
+  async tearDown() {
+    await this.browser.close();
+  }
+
   async login(username, password) {
-    const browser = await puppeteer.launch({ args: this.args });
-    const page = await browser.newPage();
+    const page = await this.browser.newPage();
     await page.goto('https://www.instagram.com/accounts/login');
+
+    await page.waitForSelector('input');
+    await page.type('input[type="text"]', username);
+    await page.type('input[type="password"]', password);
+    await page.click('button[type="submit"]');
+    const response = await page.waitForNavigation({ timeout: 10000 });
+
+    // await page.close();
+    return response;
   }
 
   async getPostsFrom(graph) {
-    const browser = await puppeteer.launch({ headless: true, args: this.args });
-    const page = await browser.newPage();
+    const page = await this.browser.newPage();
     await page.goto(`https://www.instagram.com/p/${graph.shortcode}/?taken-by=${this.username}`);
 
     const result = await page.evaluate(() => {
@@ -48,14 +63,12 @@ export default class NightStalker {
     graph.setDescription(result.description);
 
     await page.close();
-    await browser.close();
 
     return graph;
   }
 
   async getPosts(count = 3) {
-    const browser = await puppeteer.launch({ args: this.args });
-    const page = await browser.newPage();
+    const page = await this.browser.newPage();
     await page.goto(`https://www.instagram.com/${this.username}`);
 
     const graphEdges = await page.evaluate((postCount) => {
@@ -73,7 +86,6 @@ export default class NightStalker {
     const graphs = Grapher.deconstruct(graphEdges);
 
     await page.close();
-    await browser.close();
 
     return graphs.reduce((accumulator, graph) =>
       accumulator.then(results =>

@@ -18,7 +18,8 @@
   },
   "main": "./dist/index.js",
   "dependencies": {
-    "puppeteer": "^1.14.0"
+    "puppeteer": "^1.14.0",
+    "dotenv": "^8.0.0"
   },
   "scripts": {
     "test": "jest src/tests",

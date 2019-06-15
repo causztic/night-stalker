@@ -17,7 +17,9 @@ yarn install
 
 ## Usage
 ```javascript
-  const balanar = new NightStalker(username);
+  const balanar = await NightStalker.loadBrowser();
+  balanar.setUserName('username-to-scrape');
+  
   const posts = await balanar.getPosts(noOfPosts);
 ```
 

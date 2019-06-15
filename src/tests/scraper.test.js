@@ -4,15 +4,15 @@ import GraphObject from '../components/GraphObject';
 jest.setTimeout(10000);
 
 test('it should get posts', async () => {
-  const ns = new NightStalker();
+  const ns = await NightStalker.loadBrowser();
   ns.setUserName('rrreol999');
   const posts = await ns.getPosts(3);
   expect(posts).toHaveLength(3);
   expect(posts[0].media[0]).not.toBe('');
 });
 
-describe('testing for specific posts', () => {
-  const ns = new NightStalker();
+describe('testing for specific posts', async () => {
+  const ns = await NightStalker.loadBrowser();
   ns.setUserName('rrreol999');
 
   test('it should work for non-carousel items', async () => {
