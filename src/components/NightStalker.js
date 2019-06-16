@@ -21,7 +21,7 @@ export default class NightStalker {
     const cookie = await storage.getItem('night-stalker-cookie');
     let result;
 
-    if (Object.keys(cookie).length > 0) {
+    if (cookie && Object.keys(cookie).length > 0) {
       // has cookie, try to login
       let currentPage = page;
       if (page === undefined) {
