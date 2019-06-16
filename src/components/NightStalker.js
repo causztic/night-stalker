@@ -118,11 +118,11 @@ export default class NightStalker {
       return results.items.map((item) => {
         if (item.media_type === 2) {
           // video
-          return item.video_versions[0].url;
+          return { code: item.code, url: item.video_versions[0].url };
         }
         if (item.media_type === 1) {
           // still image
-          return item.image_versions2.candidates[0].url;
+          return { code: item.code, url: item.image_versions2.candidates[0].url };
         }
         // not sure what other media types are there
         return null;

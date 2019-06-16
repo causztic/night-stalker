@@ -27,7 +27,7 @@ test('it should get stories', async () => {
   const stories = await ns.getStories();
   stories.forEach((story) => {
     expect(story).toBeTruthy();
-    expect(new RegExp(/\.mp4\?|\.jpg\?/).test(story)).toBeTruthy();
+    expect(new RegExp(/\.mp4\?|\.jpg\?/).test(story.url)).toBeTruthy();
   });
   await ns.tearDown();
 });
