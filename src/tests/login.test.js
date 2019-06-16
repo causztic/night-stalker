@@ -31,3 +31,12 @@ test('it should get stories', async () => {
   });
   await ns.tearDown();
 });
+
+test('it should not fail if no stories', async () => {
+  const ns = await NightStalker.loadBrowser();
+  await ns.login(process.env.USERNAME, process.env.PASSWORD);
+  ns.setUserName('grafrore');
+  const stories = await ns.getStories();
+  expect(stories.length).toBe(0);
+  await ns.tearDown();
+});

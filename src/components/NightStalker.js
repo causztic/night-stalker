@@ -111,6 +111,12 @@ export default class NightStalker {
       await page.goto(`https://www.instagram.com/stories/${this.username}/`);
 
       // eslint-disable-next-line
+      const hasStory = await page.evaluate(() => window._sharedData.entry_data.StoriesPage);
+      if (hasStory === undefined) {
+        return [];
+      }
+
+      // eslint-disable-next-line
       const userId = await page.evaluate(() => window._sharedData.entry_data.StoriesPage[0].user.id);
       page.setUserAgent('Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+');
       const results = await page.goto(`https://i.instagram.com/api/v1/feed/user/${userId}/reel_media/`).then(res => res.json());
