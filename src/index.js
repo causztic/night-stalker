@@ -1,1 +1,3 @@
-export default './components/NightStalker';
+import NightStalker from './components/NightStalker';
+
+module.exports = NightStalker;
