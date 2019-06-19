@@ -29,15 +29,17 @@ export default class NightStalker {
       }
       await currentPage.setCookie(...cookie);
       await currentPage.goto('https://www.instagram.com');
-      // if invalid cookie, return false
-      result = await currentPage.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
+      // eslint-disable-next-line
+      const isChallenged = await currentPage.evaluate(() => window._sharedData.entry_data.Challenge);
+      const isLoggedIn = await currentPage.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
+      result = (isChallenged === undefined) && isLoggedIn;
+
       if (page === undefined) {
         await currentPage.close();
       }
     } else {
       result = false;
     }
-
     return result;
   }
 
@@ -103,6 +105,23 @@ export default class NightStalker {
     await page.close();
 
     return graph;
+  }
+
+  async getLive() {
+    const page = await this.browser.newPage();
+    if (await this.isLoggedIn(page)) {
+      page.setUserAgent('Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+');
+      const results = await page.goto('https://i.instagram.com/api/v1/feed/reels_tray/').then(res => res.json());
+      const broadcastItem = results.broadcasts.find(broadcast => broadcast.broadcast_owner.username === this.username);
+      if (broadcastItem !== undefined) {
+        const started = new Date(0);
+        started.setUTCSeconds(broadcastItem.published_time);
+        return { live: true, started };
+      }
+      return { live: false };
+    }
+    await page.close();
+    throw new Error('must be logged in to get stories');
   }
 
   async getStories() {
