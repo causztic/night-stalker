@@ -3,6 +3,8 @@ import Grapher from './Grapher';
 const puppeteer = require('puppeteer');
 const storage = require('node-persist');
 
+const INSTAGRAM_AGENT = 'Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+';
+
 export default class NightStalker {
   constructor(browser, args) {
     this.browser = browser;
@@ -29,15 +31,17 @@ export default class NightStalker {
       }
       await currentPage.setCookie(...cookie);
       await currentPage.goto('https://www.instagram.com');
-      // if invalid cookie, return false
-      result = await currentPage.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
+      // eslint-disable-next-line
+      const isChallenged = await currentPage.evaluate(() => window._sharedData.entry_data.Challenge);
+      const isLoggedIn = await currentPage.evaluate(() => document.querySelector('html').classList.contains('logged-in'));
+      result = (isChallenged === undefined) && isLoggedIn;
+
       if (page === undefined) {
         await currentPage.close();
       }
     } else {
       result = false;
     }
-
     return result;
   }
 
@@ -105,6 +109,23 @@ export default class NightStalker {
     return graph;
   }
 
+  async getBroadcastInfo() {
+    const page = await this.browser.newPage();
+    if (await this.isLoggedIn(page)) {
+      page.setUserAgent(INSTAGRAM_AGENT);
+      const results = await page.goto('https://i.instagram.com/api/v1/feed/reels_tray/').then(res => res.json());
+      const broadcastItem = results.broadcasts.find(broadcast => broadcast.broadcast_owner.username === this.username);
+      if (broadcastItem !== undefined) {
+        const started = new Date(0);
+        started.setUTCSeconds(broadcastItem.published_time);
+        return { live: true, started };
+      }
+      return { live: false };
+    }
+    await page.close();
+    throw new Error('must be logged in to get broadcasts');
+  }
+
   async getStories() {
     const page = await this.browser.newPage();
     if (await this.isLoggedIn(page)) {
@@ -118,7 +139,7 @@ export default class NightStalker {
 
       // eslint-disable-next-line
       const userId = await page.evaluate(() => window._sharedData.entry_data.StoriesPage[0].user.id);
-      page.setUserAgent('Instagram 10.26.0 (iPhone7,2; iOS 10_1_1; en_US; en-US; scale=2.00; gamut=normal; 750x1334) AppleWebKit/420+');
+      page.setUserAgent(INSTAGRAM_AGENT);
       const results = await page.goto(`https://i.instagram.com/api/v1/feed/user/${userId}/reel_media/`).then(res => res.json());
       await page.close();
       return results.items.map((item) => {

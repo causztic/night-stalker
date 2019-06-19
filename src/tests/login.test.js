@@ -40,3 +40,13 @@ test('it should not fail if no stories', async () => {
   expect(stories.length).toBe(0);
   await ns.tearDown();
 });
+
+test('it should return the correct structure for getLive', async () => {
+  const ns = await NightStalker.loadBrowser();
+  await ns.login(process.env.USERNAME, process.env.PASSWORD);
+  // will fail if instagram has no stories..need to find a better way to test
+  ns.setUserName('rrreol999');
+  const live = await ns.getBroadcastInfo();
+  expect(Object.keys(live).includes('live')).toBeTruthy();
+  await ns.tearDown();
+});
