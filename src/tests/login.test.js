@@ -46,7 +46,7 @@ test('it should return the correct structure for getLive', async () => {
   await ns.login(process.env.USERNAME, process.env.PASSWORD);
   // will fail if instagram has no stories..need to find a better way to test
   ns.setUserName('rrreol999');
-  const live = await ns.getLive();
+  const live = await ns.getBroadcastInfo();
   expect(Object.keys(live).includes('live')).toBeTruthy();
   await ns.tearDown();
 });
