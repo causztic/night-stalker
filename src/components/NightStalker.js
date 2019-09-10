@@ -163,29 +163,35 @@ export default class NightStalker {
   async getPosts(count = 3) {
     const page = await this.browser.newPage();
     await page.goto(`https://www.instagram.com/${this.username}`);
-    console.log(JSON.stringify(this.browser));
-    const graphEdges = await page.evaluate((postCount) => {
-      const postArray = [];
-      // eslint-disable-next-line no-underscore-dangle
-      const [profile] = window._sharedData.entry_data.ProfilePage;
-      // eslint-disable-next-line prefer-destructuring
-      const edges = profile.graphql.user.edge_owner_to_timeline_media.edges;
-      edges.slice(0, postCount).forEach((edge) => {
-        postArray.push(edge.node);
-      });
-      return postArray;
-    }, count);
 
-    const graphs = Grapher.deconstruct(graphEdges);
-    console.log(`Graphs: ${JSON.stringify(graphs)}`);
+    try {
+      const graphEdges = await page.evaluate((postCount) => {
+        const postArray = [];
+        // eslint-disable-next-line no-underscore-dangle
+        const [profile] = window._sharedData.entry_data.ProfilePage;
+        // eslint-disable-next-line prefer-destructuring
+        const edges = profile.graphql.user.edge_owner_to_timeline_media.edges;
+        edges.slice(0, postCount).forEach((edge) => {
+          postArray.push(edge.node);
+        });
+        return postArray;
+      }, count);
 
-    await page.close();
+      const graphs = Grapher.deconstruct(graphEdges);
+      console.log(`Graphs: ${JSON.stringify(graphs)}`);
 
-    return graphs.reduce((accumulator, graph) =>
-      accumulator.then(results =>
-        this.getPostsFrom(graph).then((updatedGraph) => {
-          results.push(updatedGraph);
-          return results;
-        })), Promise.resolve([]));
+      await page.close();
+      return graphs.reduce((accumulator, graph) =>
+        accumulator.then(results =>
+          this.getPostsFrom(graph).then((updatedGraph) => {
+            results.push(updatedGraph);
+            return results;
+          })), Promise.resolve([]));
+    } catch (e) {
+      if (e instanceof puppeteer.errors.TimeoutError) {
+        console.error(e);
+      }
+      return null;
+    }
   }
 }
