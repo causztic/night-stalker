@@ -177,6 +177,7 @@ export default class NightStalker {
     }, count);
 
     const graphs = Grapher.deconstruct(graphEdges);
+    console.log(`Graphs: ${JSON.stringify(graphs)}`);
 
     await page.close();
 

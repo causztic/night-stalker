@@ -7,6 +7,7 @@ test('it should get posts', async () => {
   const ns = await NightStalker.loadBrowser();
   ns.setUserName('rrreol999');
   const posts = await ns.getPosts(3);
+  console.log(posts);
   expect(posts).toHaveLength(3);
   expect(posts[0].media[0]).not.toBe('');
   await ns.tearDown();
@@ -33,13 +34,13 @@ test('it should return carousel items', async () => {
   ns.setUserName('rrreol999');
   const graphObject = new GraphObject({
     id: '1',
-    shortcode: 'Bj4wlfajGIi',
+    shortcode: 'B1vxpQjpRoW',
     media: '',
     thumbnail: '',
     timestamp: '',
   });
 
   const posts = await ns.getPostsFrom(graphObject);
-  expect(posts.media).toHaveLength(4);
+  expect(posts.media).toHaveLength(5);
   await ns.tearDown();
 });
