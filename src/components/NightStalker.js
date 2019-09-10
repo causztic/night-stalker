@@ -178,7 +178,6 @@ export default class NightStalker {
       }, count);
 
       const graphs = Grapher.deconstruct(graphEdges);
-      console.log(`Graphs: ${JSON.stringify(graphs)}`);
 
       await page.close();
       return graphs.reduce((accumulator, graph) =>
@@ -188,9 +187,7 @@ export default class NightStalker {
             return results;
           })), Promise.resolve([]));
     } catch (e) {
-      if (e instanceof puppeteer.errors.TimeoutError) {
-        console.error(e);
-      }
+      console.error(e);
       return null;
     }
   }
