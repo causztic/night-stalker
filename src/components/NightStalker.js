@@ -163,7 +163,7 @@ export default class NightStalker {
   async getPosts(count = 3) {
     const page = await this.browser.newPage();
     await page.goto(`https://www.instagram.com/${this.username}`);
-
+    console.log(JSON.stringify(this.browser));
     const graphEdges = await page.evaluate((postCount) => {
       const postArray = [];
       // eslint-disable-next-line no-underscore-dangle
